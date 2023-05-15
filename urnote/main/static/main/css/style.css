@@ -1,0 +1,40 @@
+body {
+    background: #4e4e4e;
+}
+
+aside {
+    color: white;
+    float: left;
+    width: 10%;
+    background: #3b3b3b;
+    padding: 0.5%;
+    height: 100vh;
+    border-right: 4px solid #444444;
+}
+
+.text_logo {
+    color: #ff4aea;
+    font-weight: bold;
+    font-size: 20px;
+}
+
+aside ul {
+    list-style: none
+}
+
+aside ul i {
+    margin-right: 4px;
+}
+
+aside ul a {
+    color: white;
+    text-decoration: none;
+    display: block;
+    margin-top: 10px;
+    transition: transform 50ms linear;
+}
+
+aside ul li:hover, aside ul a:hover {
+    color: #ff4aea;
+    transform: scale(1.02);
+}
