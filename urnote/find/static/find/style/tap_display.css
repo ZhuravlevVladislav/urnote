@@ -1,0 +1,14 @@
+#rhythm-area {
+    width: 500px;
+    height: 500px;
+    border: 1px solid black;
+    position: relative;
+    overflow: hidden;
+}
+
+.square {
+    width: 20px;
+    height: 20px;
+    background-color: red;
+    position: absolute;
+}

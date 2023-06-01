@@ -1,9 +1,22 @@
 {% extends 'main/layout.html' %}
 
+{% load static %}
+
 {% block title %}
 	Поиск
 {% endblock %}
 
+{% block style %}
+	<link rel="stylesheet" type="text/css" href="{% static 'find/style/tap_display.css' %}">
+{% endblock %}
+
+
+{% block scripts %}
+	<script src="{% static 'find/js/tap_display.js' %}"></script>
+{% endblock %}
+
 {% block content %}
-	coming soon
+	<div id="rhythm-area"></div>
+	<button id="find-button">Find</button>
+
 {% endblock %}
