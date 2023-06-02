@@ -1,7 +1,6 @@
 from rest_framework import serializers
 
-
-class MillisecondsSerializer(serializers.Serializer):
-    times = serializers.ListField(
+class RhythmDataSerializer(serializers.Serializer):
+    rhythm_data = serializers.ListField(
         child=serializers.IntegerField()
     )

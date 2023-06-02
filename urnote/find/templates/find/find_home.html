@@ -13,10 +13,13 @@
 
 {% block scripts %}
 	<script src="{% static 'find/js/tap_display.js' %}"></script>
+	<script src="{% static 'find/js/show_results.js' %}"></script>
 {% endblock %}
 
 {% block content %}
+
 	<div id="rhythm-area"></div>
 	<button id="find-button">Find</button>
+	<div id="results"></div>
 
 {% endblock %}
