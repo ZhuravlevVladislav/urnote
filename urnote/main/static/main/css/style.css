@@ -12,6 +12,36 @@ aside {
     border-right: 4px solid #444444;
 }
 
+main {
+    float: left;
+}
+
+#results ul {
+    list-style: none
+}
+
+#results ul li {
+
+    color: white;
+}
+
+#results ul li a {
+    color: white;
+    text-decoration: none;
+    display: inline-block;
+}
+
+#results ul a:hover {
+    color: #ff4aea;
+}
+
+#find-button {
+    background: #ff4aea;
+    border-radius: 5px;
+    border: none;
+    width: 100%;
+}
+
 .text_logo {
     color: #ff4aea;
     font-weight: bold;

@@ -67,30 +67,44 @@ document.addEventListener('DOMContentLoaded', (event) => {
             },
             body: JSON.stringify({rhythm_data: rhythmData})
         })
-        .then(response => response.json())
-        .then(data => {
-            let resultsDiv = document.querySelector('#results');
-            resultsDiv.innerHTML = '';
+            .then(response => response.json())
+            .then(data => {
+                let resultsDiv = document.querySelector('#results');
+                resultsDiv.innerHTML = '';
 
-            if (typeof data === 'string') {
-                resultsDiv.innerHTML = data;
-            } else if (Array.isArray(data)) {
-                let ul = document.createElement('ul');
 
-                data.forEach(item => {
-                    let li = document.createElement('li');
-                    let a = document.createElement('a');
-                    a.href = item;
-                    a.text = item;
-                    a.target = '_blank';
 
-                    li.appendChild(a);
-                    ul.appendChild(li);
-                });
+                if (Array.isArray(data)) {
+                    let ul = document.createElement('ul');
+                    ul.classList.add('song-list');
 
-                resultsDiv.appendChild(ul);
-            }
-        })
-        .catch(error => console.error('Error:', error));
+                    data.forEach(song => {
+                        let li = document.createElement('li');
+                        li.classList.add('song-item');
+
+                        let fullTitleDiv = document.createElement('div');
+                        fullTitleDiv.classList.add('full-title');
+                        fullTitleDiv.textContent = song.artist + ' - ' + song.title
+
+                        let linkDiv = document.createElement('div');
+                        linkDiv.classList.add('song-link');
+                        let link = document.createElement('a');
+                        link.href = song.youtube_link;
+                        link.textContent = 'Listen on YouTube';
+                        link.target = '_blank';
+                        linkDiv.appendChild(link);
+
+                        li.append(fullTitleDiv)
+                        li.appendChild(linkDiv);
+                        ul.appendChild(li);
+                    });
+
+                    resultsDiv.appendChild(ul);
+                } else {
+                    resultsDiv.textContent = 'По вашему запросу ничего не найдено'
+                    resultsDiv.style.color = 'white';
+                }
+            })
+            .catch(error => console.error('Error:', error));
     });
 });

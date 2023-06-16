@@ -5,58 +5,57 @@ from rest_framework.decorators import api_view
 from .serializers import RhythmDataSerializer
 from django.views.decorators.csrf import csrf_exempt
 
-from googleapiclient.discovery import build
-from googleapiclient.errors import HttpError
+from . import models
 
 
 def find_home(request):
-    return render(request, '../templates/find/find_home.html')
+    return render(request, 'find/find_home.html')
 
 
-DEVELOPER_KEY = 'AIzaSyBNfNwPVBhWZL9a6Yc27uw9LZRCQUVzPuM'
-YOUTUBE_API_SERVICE_NAME = 'youtube'
-YOUTUBE_API_VERSION = 'v3'
+def search_songs_with_rhythm(bpm):
+    song_list = models.Song.objects.all()
+    similarities_list = []
+    result = []
 
+    for song in song_list:
+        if song.bpm-5 <= bpm <= song.bpm+5:
+            similarities_list.append(song)
 
-def search_songs_with_rhythm(rhythm):
-    youtube = build(YOUTUBE_API_SERVICE_NAME, YOUTUBE_API_VERSION, developerKey=DEVELOPER_KEY)
+    for res in similarities_list:
+        result.append({
+            'title': res.title,
+            'artist': res.artist,
+            'youtube_link': res.youtube_link,
+            'bpm': res.bpm,
+        })
 
-    try:
-        search_response = youtube.search().list(
-            q=rhythm,
-            part='id',
-            maxResults=10,
-            type='video'
-        ).execute()
-
-        video_ids = []
-        for search_result in search_response.get('items', []):
-            video_ids.append(search_result['id']['videoId'])
-
-        if video_ids:
-            video_links = [f'https://www.youtube.com/watch?v={video_id}' for video_id in video_ids]
-            return video_links
-        else:
-            return "По вашему запросу не найдено ни одной песни на YouTube."
-
-    except HttpError as e:
-        return f"An HTTP error {e.resp.status} occurred: {e.content}"
+    if len(result)==0:
+        return -1
+    return result
 
 
 def detect_beat(rhythm_data):
-    # Преобразует временные отметки ударов в BMP (удары в минуту)
-    if len(rhythm_data) < 2:
+    # Преобразует временные отметки ударов в BPM
+    amount_beats = len(rhythm_data)
+
+    if amount_beats < 2:
         return []
 
     # Преобразовать временные отметки в интервалы между ударами
     intervals = []
-    for i in range(1, len(rhythm_data)):
+    for i in range(1, amount_beats):
         intervals.append(rhythm_data[i] - rhythm_data[i - 1])
 
-    # Преобразовать интервалы в BMP
-    bmp_values = [60000 / interval for interval in intervals]
+    # Преобразовать интервалы в BPM
+    bpm_values = [60000 / interval for interval in intervals]
 
-    return bmp_values
+    average_bpm = sum(bpm_values) // (amount_beats - 1)
+
+    print('amount_beats: ', amount_beats)
+    print('BPM Values: ', bpm_values)
+    print('BPM: ', average_bpm)
+
+    return average_bpm
 
 
 @csrf_exempt
@@ -66,8 +65,8 @@ def rhythm_view(request):
     if serializer.is_valid():
         rhythm_data = serializer.validated_data['rhythm_data']
         rhythm = detect_beat(rhythm_data)
-        rhythm_string = ' '.join(map(str, rhythm))  # convert the rhythm to a string
-        results = search_songs_with_rhythm(rhythm_string)
+        # rhythm_string = ' '.join(map(str, rhythm))  # convert the rhythm to a string
+        results = search_songs_with_rhythm(rhythm)
         return Response(results, status=200)
     else:
         return Response(serializer.errors, status=400)

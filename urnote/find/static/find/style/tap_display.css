@@ -1,7 +1,9 @@
 #rhythm-area {
     width: 500px;
     height: 500px;
+    background: white;
     border: 1px solid black;
+    border-radius: 5px;
     position: relative;
     overflow: hidden;
 }
@@ -9,6 +11,7 @@
 .square {
     width: 20px;
     height: 20px;
-    background-color: red;
+    background-color: #ff4aea;
+    border-radius: 25%;
     position: absolute;
 }
